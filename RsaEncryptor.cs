@@ -16,6 +16,29 @@ namespace RsaSender
         {
             RSA rsa = RSA.Create(4096);
 
+            GetXmlString(rsa, pathToKey);
+
+            using (rsa)
+            {
+                try
+                {
+                    return rsa.Encrypt(Encoding.UTF8.GetBytes(input), RSAEncryptionPadding.Pkcs1);
+                }
+                catch (Exception e)
+                {
+                    throw new Exception("Encryption failed with the following message: " + e.Message);
+                }                
+            }
+        }
+
+        /// <summary>
+        /// Gets the text from a local xml file
+        /// </summary>
+        /// <param name="rsa">RSA object to assign xml text to</param>
+        /// <param name="pathToKey">Path to the local xml file</param>
+        /// <exception cref="Exception"></exception>
+        private void GetXmlString(RSA rsa, string pathToKey)
+        {
             using (rsa)
             {
                 try
@@ -26,15 +49,6 @@ namespace RsaSender
                 {
                     throw new Exception("Getting public key from xml failed with the following message: " + e.Message);
                 }
-
-                try
-                {
-                    return rsa.Encrypt(Encoding.UTF8.GetBytes(input), RSAEncryptionPadding.Pkcs1);
-                }
-                catch (Exception e)
-                {
-                    throw new Exception("Encryption failed with the following message: " + e.Message);
-                }                
             }
         }
     }
